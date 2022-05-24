@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  client:
+    container_name: client
+    build: 
+      context: ./mynote_client
+      dockerfile: Dockerfile.dev
+    ports: 
+      - "3000:3000"
+    volumes:
+        - ./mynote_client:/app
+        - /app/node_modules
+        - /app/.next
+    command: npm run dev
+    restart: always
+    networks:
+      - mynote-network
+  server:
+    container_name: server
+    build:
+      context: ./mynote_api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./mynote_api:/app
+      - /app/node_modules
+    ports:
+      - "5000:5000"
+      - "9229:9229"
+    command: npm run start:dev
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - mynote-network
+  db:
+    container_name: db
+    image: mongo:latest
+    restart: always
+    volumes:
+      - database:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - mynote-network
+networks:
+  mynote-network:
+    driver: bridge
+volumes:
+  database:

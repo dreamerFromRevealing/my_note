@@ -1,0 +1,8 @@
+mynote_client/node_modules
+mynote_client/.next
+mynote_client/.env
+mynote_api/node_modules
+mynote_api/dist
+mynote_api/.env
+.idea
+.git
