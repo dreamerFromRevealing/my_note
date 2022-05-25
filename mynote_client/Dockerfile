@@ -1,15 +1,28 @@
-FROM node:16.13.2-alpine3.14
+# Base on offical Node.js Alpine image
+FROM node:alpine
 
-WORKDIR /app
+# Set working directory
+WORKDIR /usr/app
 
-COPY package*.json ./
+# Copy package.json and package-lock.json before other files
+# Utilise Docker cache to save re-installing dependencies if unchanged
+COPY ./package*.json ./
 
-RUN npm i
+# Install dependencies
+RUN npm install --production
 
-COPY . .
+# Copy all files
+COPY ./ ./
 
+# Build app
 RUN npm run build
 
+# Expose the listening port
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+# Run container as non-root (unprivileged) user
+# The node user is provided in the Node.js Alpine base image
+USER node
+
+# Run npm start script when container starts
+CMD [ "npm", "start" ]
