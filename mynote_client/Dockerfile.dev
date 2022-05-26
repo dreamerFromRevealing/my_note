@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . ./
 
 # building the app
-RUN yarn i
+RUN yarn install
 
 RUN chown -R node: /app
 USER node
